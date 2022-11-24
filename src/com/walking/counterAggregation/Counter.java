@@ -13,24 +13,12 @@ public class Counter {
         this.value = startValue;
     }
 
-    public int increase(int diff) {
-        if (diff < 0) {
-            System.out.println("Rolling down the counter!");
-        }
-        value += diff;
-        return value;
-    }
-
-    public int increase() {
-        return ++value;
-    }
-
-    public void reset() {
-        value = 0;
-    }
-
     public int getValue() {
         return value;
+    }
+
+    public void setValue(int value){
+        this.value = value;
     }
 
     public String getName() {

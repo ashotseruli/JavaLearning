@@ -1,18 +1,14 @@
 package com.walking.counterAggregation;
 
 public class CounterService {
-    public CounterService(){
-        counters[0] = new GasCounter();
-        counters[1] = new WaterCounter();
-        counters[2] = new ElectricCounter();
-    }
+    public CounterService(){}
 
     public CounterService(Counter[] counters){
         this.counters = counters;
     }
 
     public Counter[] getCounters(){
-        return counters; // тут точно так должно быть?
+        return counters; // тут прямо отдаем сцылку на массив и делай с ним что хошь?
     }
 
     public Counter findCounter(final String name){
@@ -29,25 +25,25 @@ public class CounterService {
     public int increaseCounter(final String name, int diff){
         int newValue = 0;
         Counter counter = findCounter(name);
-        if (counter != null){
-            newValue = counter.increase(diff);
+        if(counter == null){
+            // исключение? В остальных методах аналогично
+        }
+        else {
+            newValue = counter.getValue() + diff;
+            counter.setValue(newValue);
         }
         return newValue;
     }
 
     public int increaseCounter(final String name){
-        int newValue = 0;
-        Counter counter = findCounter(name);
-        if (counter != null){
-            newValue = counter.increase();
-        }
-        return newValue;
+        // лучше использовать перегруженный метод или написать метод полностью?
+        return increaseCounter(name, 1);
     }
 
     public void resetCounter(final String name){
         Counter counter = findCounter(name);
         if (counter != null){
-            counter.reset();
+            counter.setValue(0);
         }
     }
 

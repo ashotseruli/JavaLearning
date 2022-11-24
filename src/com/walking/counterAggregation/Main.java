@@ -2,40 +2,59 @@ package com.walking.counterAggregation;
 
 public class Main {
     public static void main(String[] args) {
-        CounterService counterService = new CounterService();
+        counterService = new CounterService();
 
-        // создаем счетчики и грубо заполняем массив
-        counterService.getCounters()[0] = new Counter(GAS_COUNTER_NAME, CUBIC_METER, 1000);
-        counterService.getCounters()[1] = new Counter(WATER_COUNTER_NAME, CUBIC_METER, 200);
-        counterService.getCounters()[2] = new Counter(ELECTRIC_COUNTER_NAME, KILOWATT_HOUR, 300);
+        // создаем счетчики и грубо заполняем массив. Хрень же?
+        counterService.getCounters()[0] = new Counter(GAS_COUNTER_NAME, CUBIC_METER);
+        counterService.getCounters()[1] = new Counter(COLD_WATER_COUNTER_NAME, CUBIC_METER, 200);
+        counterService.getCounters()[2] = new Counter(HOT_WATER_COUNTER_NAME, CUBIC_METER, 68);
+        counterService.getCounters()[3] = new Counter(ELECTRIC_COUNTER_NAME, KILOWATT_HOUR, 300);
+
+        showCounters();
+        System.out.println();
 
         // дальше просто всячески используем
         counterService.increaseCounter(GAS_COUNTER_NAME, 10);
-        counterService.increaseCounter(WATER_COUNTER_NAME);
+        counterService.resetCounter(COLD_WATER_COUNTER_NAME);
+        counterService.increaseCounter(HOT_WATER_COUNTER_NAME, -56);
         counterService.increaseCounter(ELECTRIC_COUNTER_NAME, 88);
 
-        System.out.println("Gas: " + counterService.getValue(GAS_COUNTER_NAME) + " " + counterService.getMeasureName(GAS_COUNTER_NAME)); // get by name
-        System.out.println("Water: " + counterService.getValue(WATER_COUNTER_NAME) + " " + counterService.getMeasureName(WATER_COUNTER_NAME));
-        System.out.println("Electricity: " + counterService.getValue(ELECTRIC_COUNTER_NAME) + " " + counterService.getMeasureName(ELECTRIC_COUNTER_NAME));
-
+        showCounters();
         System.out.println();
 
         Counter[] counters = counterService.getCounters(); // надо ли вообще давать такой доступ?
         Counter gasCounter = counters[0];
         gasCounter.setValue(0);
-        System.out.println("Gas after reset: " + gasCounter.getValue() + " " + gasCounter.getMeasureName());
+        System.out.println(gasCounter.getName() + " after reset: " + gasCounter.getValue() + " " + gasCounter.getMeasureName());
 
-        Counter waterCounter = counterService.findCounter(WATER_COUNTER_NAME); // тоже сомнительно насчет корректности доступа
-        counterService.increaseCounter(WATER_COUNTER_NAME, 90);
-        System.out.println("Water after increase: " + waterCounter.getValue() + " " + waterCounter.getMeasureName()); // тут выводим через сам счетчик
+        Counter coldWaterCounter = counterService.findCounter(COLD_WATER_COUNTER_NAME); // тоже сомнительно насчет корректности доступа
+        counterService.increaseCounter(COLD_WATER_COUNTER_NAME, 90);
+        System.out.println(coldWaterCounter.getName() + " after increase: " + coldWaterCounter.getValue() + " " + coldWaterCounter.getMeasureName()); // тут выводим через сам счетчик
 
         counterService.resetCounter(ELECTRIC_COUNTER_NAME);
-        System.out.println("Electric after reset: " + counterService.getValue(ELECTRIC_COUNTER_NAME) + " " + counterService.getMeasureName(ELECTRIC_COUNTER_NAME));
+        System.out.println( counterService.findCounter(ELECTRIC_COUNTER_NAME).getName() + " after reset: " +
+                            counterService.findCounter(ELECTRIC_COUNTER_NAME).getValue() + " " +
+                            counterService.findCounter(ELECTRIC_COUNTER_NAME).getMeasureName());
+
+        System.out.println( counterService.findCounter(HOT_WATER_COUNTER_NAME).getName() + " after increase: " +
+                            counterService.increaseCounter(HOT_WATER_COUNTER_NAME) + " " +
+                            counterService.getMeasureName(HOT_WATER_COUNTER_NAME));
+
+        System.out.println("GAS counter: " + counterService.getValue(GAS_COUNTER_NAME) + counterService.getMeasureName(GAS_COUNTER_NAME));
 
     }
-    private final static String ELECTRIC_COUNTER_NAME = "ElectricCounter"; // тут бы эти имена все объединить с теми, что в Counter?
-    private final static String WATER_COUNTER_NAME = "WaterCounter";
-    private final static String GAS_COUNTER_NAME = "GasCounter";
+
+    private static CounterService counterService;
+    private static void showCounters(){
+        Counter[] counters = counterService.getCounters();
+        for(Counter c:counters){
+            System.out.println(c.getName() + ": " + c.getValue() + " " + c.getMeasureName());
+        }
+    }
+    private final static String ELECTRIC_COUNTER_NAME = "Electricity"; // тут бы эти имена все объединить с теми, что в Counter?
+    private final static String COLD_WATER_COUNTER_NAME = "Cold water";
+    private final static String HOT_WATER_COUNTER_NAME = "Hot water";
+    private final static String GAS_COUNTER_NAME = "Gas";
 
     private final static String CUBIC_METER = "m3";
     private final static String KILOWATT_HOUR = "KWt*h";

@@ -65,5 +65,5 @@ public class CounterService {
         return value;
     }
 
-    private Counter[] counters = new Counter[3]; // тут, конечно, должна быть коллекция
+    private Counter[] counters = new Counter[4]; // тут, конечно, должна быть коллекция
 }

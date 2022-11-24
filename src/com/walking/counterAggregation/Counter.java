@@ -18,6 +18,10 @@ public class Counter {
     }
 
     public void setValue(int value){
+        if (value < 0){
+            System.out.println("sub zero value!");
+            //throw exception?
+        }
         this.value = value;
     }
 
